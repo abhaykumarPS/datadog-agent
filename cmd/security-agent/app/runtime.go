@@ -92,6 +92,7 @@ var (
 	activityDumpComm    string
 	activityDumpTimeout int
 	withGraph           bool
+	differentiateArgs   bool
 
 	listActivityDumpsCmd = &cobra.Command{
 		Use:   "activity",
@@ -142,6 +143,12 @@ func init() {
 		"graph",
 		false,
 		"generate a graph from the generated dump",
+	)
+	dumpActivityCmd.Flags().BoolVar(
+		&differentiateArgs,
+		"differentiate-args",
+		false,
+		"add the arguments in the process node merge algorithm",
 	)
 	stopActivityDumpCmd.Flags().StringArrayVar(
 		&activityDumpTags,
@@ -208,7 +215,7 @@ func dumpActivity(cmd *cobra.Command, args []string) error {
 	defer client.Close()
 
 	var filename, graph string
-	filename, graph, err = client.DumpActivity(activityDumpTags, activityDumpComm, int32(activityDumpTimeout), withGraph)
+	filename, graph, err = client.DumpActivity(activityDumpTags, activityDumpComm, int32(activityDumpTimeout), withGraph, differentiateArgs)
 	if err != nil {
 		return errors.Wrap(err, "unable to an request activity dump for %s")
 	}
