@@ -483,6 +483,10 @@ func (p *Probe) handleEvent(CPU uint64, data []byte) {
 			return
 		}
 
+		if IsKThread(event.ProcessContext.PPid, event.ProcessContext.Pid) {
+			return
+		}
+
 		p.resolvers.ProcessResolver.ApplyBootTime(event.processCacheEntry)
 
 		p.resolvers.ProcessResolver.AddForkEntry(event.ProcessContext.Pid, event.processCacheEntry)
@@ -492,6 +496,11 @@ func (p *Probe) handleEvent(CPU uint64, data []byte) {
 			log.Errorf("failed to decode exec event: %s (offset %d, len %d)", err, offset, len(data))
 			return
 		}
+
+		if IsKThread(event.ProcessContext.PPid, event.ProcessContext.Pid) {
+			return
+		}
+
 		p.resolvers.ProcessResolver.SetProcessArgs(event.processCacheEntry)
 		p.resolvers.ProcessResolver.SetProcessEnvs(event.processCacheEntry)
 
