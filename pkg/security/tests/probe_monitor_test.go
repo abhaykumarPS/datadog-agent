@@ -35,10 +35,10 @@ func TestRulesetLoaded(t *testing.T) {
 	}
 	defer test.Close()
 
-	t.Run("ruleset_loaded", func(t *testing.T) {
-		patterns := seclog.AddPatterns("probe.*")
-		defer seclog.SetPatterns(patterns...)
+	patterns := seclog.AddPatterns("probe.*", "module.*")
+	defer seclog.SetPatterns(patterns...)
 
+	t.Run("ruleset_loaded", func(t *testing.T) {
 		if err = test.GetProbeCustomEvent(t, func() error {
 			// This test is an exception, we should never use any t.* method in the action function (especially within a
 			// goroutine). We don't have a choice here because we're not triggering a kernel space event: the same

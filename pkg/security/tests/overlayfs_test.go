@@ -16,6 +16,7 @@ import (
 	"unsafe"
 
 	"github.com/DataDog/datadog-agent/pkg/security/ebpf/kernel"
+	seclog "github.com/DataDog/datadog-agent/pkg/security/log"
 	sprobe "github.com/DataDog/datadog-agent/pkg/security/probe"
 	"github.com/DataDog/datadog-agent/pkg/security/secl/rules"
 	"github.com/stretchr/testify/assert"
@@ -163,6 +164,9 @@ func TestOverlayFS(t *testing.T) {
 			t.Logf("failed to unmount %s: %v", testMerged, err)
 		}
 	}()
+
+	patterns := seclog.AddPatterns("probe.*", "module.*")
+	defer seclog.SetPatterns(patterns...)
 
 	// open a file in lower in RDONLY and check that open/unlink inode are valid from userspace
 	// perspective and equals
