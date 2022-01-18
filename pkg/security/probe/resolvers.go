@@ -12,6 +12,7 @@ import (
 	"os"
 	"sort"
 	"strings"
+	"unsafe"
 
 	"github.com/avast/retry-go"
 	"github.com/pkg/errors"
@@ -184,9 +185,14 @@ func (r *Resolvers) Start(ctx context.Context) error {
 
 // Snapshot collects data on the current state of the system to populate user space and kernel space caches.
 func (r *Resolvers) Snapshot() error {
+	pid := os.Getpid()
+	r.probe.pidDiscarders.discard(0xffffffffffffffff, uint32(pid))
+
 	if err := retry.Do(r.snapshot, retry.Delay(0), retry.Attempts(5)); err != nil {
 		return errors.Wrap(err, "unable to snapshot processes")
 	}
+
+	r.probe.pidDiscarders.Delete(unsafe.Pointer(&pid))
 
 	r.ProcessResolver.SetState(snapshotted)
 
