@@ -600,7 +600,7 @@ func (p *ProcessResolver) resolveWithKernelMaps(pid, tid uint32) *model.ProcessC
 
 // IsKThread returns whether given pids are from kthreads
 func IsKThread(ppid, pid uint32) bool {
-	return ppid == 2 || pid == 2
+	return ppid == 2 || pid == 2 || pid == 0
 }
 
 func (p *ProcessResolver) resolveWithProcfs(pid uint32, maxDepth int) *model.ProcessCacheEntry {
