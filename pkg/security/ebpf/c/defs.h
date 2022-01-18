@@ -216,6 +216,8 @@ enum event_type
     EVENT_PTRACE,
     EVENT_MMAP,
     EVENT_MPROTECT,
+    EVENT_INIT_MODULE,
+    EVENT_DELETE_MODULE,
     EVENT_MAX, // has to be the last one
 };
 

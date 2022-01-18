@@ -279,6 +279,22 @@ def build_functional_tests(
 
 
 @task
+def build_test_module(
+    ctx,
+):
+    with ctx.cd("./pkg/security/tests/syscall_tester/c/test_module"):
+        ctx.run("make")
+
+
+@task
+def cleanup_test_module(
+    ctx,
+):
+    with ctx.cd("./pkg/security/tests/syscall_tester/c/test_module"):
+        ctx.run("make clean")
+
+
+@task
 def build_stress_tests(
     ctx,
     output='pkg/security/tests/stresssuite',
@@ -352,12 +368,16 @@ def functional_tests(
         skip_linters=skip_linters,
     )
 
+    build_test_module(ctx)
+
     run_functional_tests(
         ctx,
         testsuite=output,
         verbose=verbose,
         testflags=testflags,
     )
+
+    cleanup_test_module(ctx)
 
 
 @task
