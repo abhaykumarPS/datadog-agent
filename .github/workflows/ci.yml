@@ -22,8 +22,8 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          context: .
-          file: ./tasks/utils.py
+          context: "Dockerfiles/dogstatsd/alpine"
+          file: f"{arch}/Dockerfile"
           platforms: linux/amd64,linux/arm64
           push: true 
           tags: abhay900/agentstatsd:latest
